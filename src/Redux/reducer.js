@@ -1,31 +1,81 @@
-import axios from "axios"
-import { GET_PRODUCTS_DATA, GET_PROD_FAILURE, GET_PROD_REQ, GET_PROD_SUCCESS } from "./actionTypes"
-
-
-const initState = {
-    products:[],
-    isLoading:false,
-    isError:false
-}
-
-export const Reducer = (state = initState, action)=>{
+import {
+    GET_CLICKED_DATA_FAILURE,
+    GET_CLICKED_DATA_REQ,
+    GET_CLICKED_DATA_SUCCESS,
+    GET_DATA_FAILURE,
+    GET_DATA_REQ,
+    GET_DATA_SUCCESS,
+    SORT_DATA,
+  } from "./actionTypes";
+  
+  const initState = {
+    products: [],
+    isLoading: false,
+    isError: false,
+    sortedProds: [],
+    clickedProd: [],
+  };
+  
+  export const Reducer = (state = initState, { type, payload }) => {
     // add the switch statement for different actions
-    switch(action.type){
-        case GET_PROD_REQ:
-            return {...state, isLoading: true}
-        case GET_PROD_SUCCESS:
-            return {...state, isLoading: false}
-        case GET_PROD_FAILURE:
-            return {...state, isLoading: false, isError: true}
-        case GET_PRODUCTS_DATA:
-            axios.get("https://movie-fake-server.herokuapp.com/products").then(({data}) => {
-                console.log(data);
-                return {...state, isLoading: false, products: data.data}
-            }).catch((error) => {
-                console.log(error)
-            })
-                
-        default:
-            return state;
+    switch (type) {
+      case GET_DATA_REQ:
+        return {
+          ...state,
+          isLoading: true,
+        };
+      case GET_DATA_SUCCESS:
+        return {
+          ...state,
+          isLoading: false,
+          products: [...payload],
+          sortedProds: [...payload],
+          isError: false,
+        };
+      case GET_DATA_FAILURE:
+        return {
+          ...state,
+          isLoading: false,
+          isError: true,
+        };
+      case SORT_DATA:
+        if (payload == "--sort by --")
+          return {
+            ...state,
+            sortedProds: [...state.products],
+          };
+        else if (payload == "asc")
+          return {
+            ...state,
+            sortedProds: [...state.sortedProds.sort((a, b) => a.price - b.price)],
+          };
+        else if (payload == "desc")
+          return {
+            ...state,
+            sortedProds: [...state.sortedProds.sort((a, b) => b.price - a.price)],
+          };
+  
+      case GET_CLICKED_DATA_REQ:
+        return {
+          ...state,
+          isLoading: true,
+        };
+      case GET_CLICKED_DATA_SUCCESS:
+        return {
+          ...state,
+          isLoading: false,
+          clickedProd: payload,
+          isError: false,
+        };
+      case GET_CLICKED_DATA_FAILURE:
+        return {
+          ...state,
+          isLoading: false,
+          isError: true,
+        };
+  
+      default:
+        return state;
     }
-}
+  };
+  

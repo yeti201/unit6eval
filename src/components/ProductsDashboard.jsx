@@ -1,45 +1,55 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getproductsData } from "../Redux/actions";
-
+import { useNavigate } from "react-router-dom";
+import { getproductsData, sortProducts } from "../Redux/actions";
+import styles from "./products.module.css";
 export const Products = () => {
-  const products = useSelector((store) => store.products);
-  const dispatch = useDispatch();
-  console.log("dashboard",products);
+  // const data = useSelector((state) => state.products);
+  const data = useSelector((state) => state.sortedProds);
 
-
+  const nav = useNavigate();
   // to get all products list on component mounts
-  // useEffect(() => {
-  //   //   dispatch an action to the store
-  //   // dont make call here
-  //   // handle it as thunk call in actions.js
-  //   dispatch(getproductsData())
-  // }, [dispatch]);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    //   dispatch an action to the store
+    // dont make call here
+    // handle it as thunk call in actions.js
+    dispatch(getproductsData());
+  }, [dispatch]);
 
-     //sort by price
+  //    sort by price
   const handleSort = (e) => {
     // dispach handle sort action to the store
+    // console.log(e.target.value)
+    dispatch(sortProducts(e.target.value.trim()));
   };
   return (
     <>
-
-      <button onClick={() => {
-        dispatch(getproductsData())
-      }}>GET DATA
-
-      </button>
-      {/* <h2>Products</h2>
-      <select onChange={handleSort}>
+      <h2>Products</h2>
+      <select id={styles.productsSelector }onChange={handleSort}>
         <option>--sort by --</option>
         <option value="asc">low to high</option>
         <option value="desc">high to low</option>
       </select>
-      <div className="products-list">
+      {console.log(data)}
+      <div id={styles.container} className="products-list">
+        {/* map throught th products  list and display the results */}
         {data &&
-          data.map(() => {
-            return <div></div>;
+          data.map((e) => {
+            return (
+              <div
+                className={styles.card}
+                key={e.id}
+                onClick={() => nav(`/products/${e.id}`)}
+              >
+                <img src={e.image} alt="" height="80%" width="100%" />
+                {/* display the results here */
+                
+                  e.title}
+              </div>
+            );
           })}
-      </div> */}
+      </div>
     </>
-  )
+  );
 };
