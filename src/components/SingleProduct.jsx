@@ -20,7 +20,7 @@ export const SingleProductList = () => {
         <h1
           style={{
             color: `${data.category == "women" ? "purple" : "teal"}`,
-            border: `2px dashed ${
+            border: `2px solid ${
               data.category == "women" ? "teal" : "purple"
             }`,
           }}
@@ -30,7 +30,7 @@ export const SingleProductList = () => {
         <h2
           style={{
             color: `${data.category == "women" ? "teal" : "purple"}`,
-            border: `2px dashed ${
+            border: `2px solid ${
               data.category == "women" ? "purple" : "teal"
             }`,
           }}
