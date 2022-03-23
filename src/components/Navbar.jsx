@@ -22,7 +22,7 @@ export const Navbar = () => {
     <ul className={styles.navbar}>
       {links.map((el,index) => (
         <Link to={el.link} key={index}>
-          <li>{el.title}</li>
+          <li><h2>{el.title}</h2></li>
         </Link>
       ))}
     </ul>
